@@ -24,6 +24,50 @@ router.get("/produtos/:produtoId", function(req,res){
 //})
 
 
+// cola do professor:
+
+router.get("/produtos/:produtoId", function(req, res){
+    if (req.params.produtoId != 1) {
+      res.status(404).json({msg: "Produto não encontrado"});
+      return;
+    }
+  
+    res.json({});
+  });
+  
+  router.post("/produtos", function(req, res){
+    if (!req.body || !req.body.nome || !req.body.preco) {
+      res.status(422).json({msg: "Nome e/ou preco do produto obrigatorios"});
+      return;
+    }
+    const novo = {
+        id: produtos.length +1,
+        nome: req.body.nome,
+        preco: req.body.preco
+    }
+
+    produtos.push(novo) //jogando os novos produtos para o array
+
+    res.status(201).json({});
+  });
+  
+  router.put("/produtos/:produtoId", function(req, res){
+    if (req.params.produtoId != 1) {
+      res.status(404).json({msg: "Produto não encontrado"});
+      return;
+    }
+  
+    res.json({});
+  });
+  
+  router.delete("/produtos/:produtoId", function(req, res){
+    if (req.params.produtoId != 1) {
+      res.status(404).json({msg: "Produto não encontrado"});
+      return;
+    }
+      
+    res.status(204).end();
+  });
 
 
 

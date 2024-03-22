@@ -61,13 +61,21 @@ router.get("/produtos/:produtoId", function(req, res){
   });
   
   router.delete("/produtos/:produtoId", function(req, res){
-    if (req.params.produtoId != 1) {
-      res.status(404).json({msg: "Produto não encontrado"});
-      return;
-    }
+    //if (req.params.produtoId != 1) {
+        const posicao = produtos.findIndex(item => item.id == req.params.produtoId)
+
+        if (posicao<0){
+            res.status(404).json({msg: "Produto não encontrado"});
+            return;
+        }
+      
+        produtos.splice(posicao,1);
+
+        res.status(204).end();
       
     res.status(204).end();
-  });
+  //}
+    });
 
 
 

@@ -13,10 +13,8 @@ router.get("/:produtoId", produtosController.buscarPeloId, produtosController.ex
 
 router.post("/", produtosController.criar);
 
-router.put("/:produtoId", produtosController.atualizar);
+router.put("/:produtoId", produtosController.buscarPeloId, produtosController.atualizar);
 
-router.delete("/:produtoId", produtosController.remover);
-
-
+router.delete("/:produtoId",produtosController.buscarPeloId, produtosController.remover); 
 
 module.exports = router;

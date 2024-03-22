@@ -42,7 +42,10 @@ function atualizar(req,res){
 function remover(req,res){
     const {produtoId} = req.params; 
     const posicao = produtos.findIndex(item => item.id == produtoId);
-    
+    if (posicao >= 0){
+        produtos.splice(posicao, 1); //a partir da posição arrancar 1 elemento
+        res.status(204).end();
+    }
 }
 
 module.exports = {listarTodos, exibir, buscarPeloId, criar, atualizar, remover};

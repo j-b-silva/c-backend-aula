@@ -22,6 +22,15 @@ function buscarPeloId(req,res,next){
 
 }
 
+function validarDados(req,res,next){
+    const {nome,preco} = req.body;
+    if(nome && preco){
+        next();
+    } else {
+        res.status(422).json({msg: "Nome e preço são obrigatórios"});
+    }
+}
+
 function criar(req,res){
     const {nome, preco} = req.body;
     const produtoNovo = {id: produtos.length+1, nome, preco}
@@ -48,4 +57,4 @@ function remover(req,res){
     }
 }
 
-module.exports = {listarTodos, exibir, buscarPeloId, criar, atualizar, remover};
+module.exports = {listarTodos, exibir, buscarPeloId, criar, atualizar, remover, validarDados};

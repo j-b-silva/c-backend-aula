@@ -1,36 +1,42 @@
-const Contato = require('./modelo');
-const inserir = require('./modelo');
-const alterar = require('./modelo');
-const deletar = require('./modelo');
-const buscar = require('./modelo');
+const modelo = require('./modelo');
 
-function adicionarContato(nome, email,telefoe){
-    const contato = new Contato("Julis", "julis@julis", 99142);
-    inserir(contato);
+async function criarContato(nome,email,telefone){
+    const contato = new modelo.Contato(nome,email,telefone);
+    const { id }= await modelo.inserir(contato);
+    contato.id = id;
+    return {...contato}; //criou uma cópia/clone do objeto e devolve (bom para otimização)
 }
 
-function buscarContato(nome){
-    const contato = new Contato("julis");
-    return buscar(); 
-}
-
-function atualizarContato(nome, email, telefone){
-    const contato = buscarContato(nome);
-    if(contato = contato){
-        contato.nome = "Lulu";
-        contato.email = "lulu@lulu";
-        contato.telefone = 92573;
-    } else{
-        console.log("Contato não encontrado!");
+async function atualizarContato(nome,email,telefone){
+    const contato = await consultarContato(nome);
+    if (contato){
+        contato.email = email;
+        contato.telefone = telefone;
+        await modelo.alterar(contato);
     }
-    alterar(contato);
+    return { ...contato }
 }
 
-function removerContato(nome){
-    const contato = removerContato(nome);
-    if(contato = contato){
-        deletar(contato)
+async function consultarContato(nome){
+    const contato = new modelo.Contato(nome);
+    const { id, email, telefone } = await modelo.consultar(contato);
+    contato.id = id;
+    contato.email = email;
+    contato.telefone = telefone;
+    return {...contato};
+}
+
+async function removerContato(nome){
+    const contato = await consultarContato(nome);
+    if(contato){
+        await modelo.deletar(contato);
     }
+    return {...contato}
 }
 
-module.exports = {adicionarContato, buscarContato, atualizarContato, removerContato}
+module.exports = {
+    criarContato, 
+    atualizarContato, 
+    consultarContato, 
+    removerContato
+};

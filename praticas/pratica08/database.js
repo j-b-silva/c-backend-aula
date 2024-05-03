@@ -1,17 +1,17 @@
-const {MongoClient} = require('mongodb');
+const { MongoClient } = require('mongodb');
 
-const url = 'mongodb+srv://renegada_142:cailley142@cluster0.odjsvyz.mongodb.net/';
-var client = new MongoClient(url);
+let db = null;
+
+const url ='mongodb+srv://renegada_142:cailley142@cluster0.odjsvyz.mongodb.net/'
 
 async function conectarDb(){
-    try{
-        await client.connect();
-        return client.db('agenda');
-    } catch(error){
-        console.log("Deu ruim!", error);
+    if(db){
+        return db;
     }
+    const client = new MongoClient(url);
+    await client.connect(); //espera conectar
+    db = client.db('agenda');
+    return db;
 }
-
-
 
 module.exports = conectarDb;

@@ -1,40 +1,39 @@
 const conectarDb = require('./database');
 
-class Contato {
-    constructor(nome,email,telefone){
+class Contato{
+    constructor(nome, email, telefone){
         this.nome = nome;
         this.email = email;
         this.telefone = telefone;
-        this.id = null
+        this.id = null;
     }
 }
 
 async function inserir(contato){
+    const { nome, email, telefone } = contato;
     const db = await conectarDb();
-    const collection = db.collection('contatos');
-    const result = collection.insertOne({nome: contato.nome, email: contato.email, telefone: contato.telefone});
-    contato.id = result.insertedId;
+    const collection = db.collection("contatos");
+    const { insertedId } = await collection.insertOne({nome, email, telefone});
+    return insertedId;
 }
-
 async function alterar(contato){
+    const { id, nome, email, telefone } = contato;
     const db = await conectarDb();
-    const collection = db.collection('contatos');
-    collection.updateOne({_id: contato.id},{$set: {nome:contato.nome, email:contato.email, telefone: contato.telefone}})
+    const collection = db.collection("contatos");
+    await collection.updateOne({_id: id},{$set: {nome, email, telefone}});
 }
-
+async function consultar(contato){
+    const {nome} = contato;
+    const db = await conectarDb();
+    const collection = db.collection("contatos");
+    const {_id, email, telefone} = await collection.findOne({ nome });
+    return { id: _id, email, telefone};
+}
 async function deletar(contato){
+    const { id } = contato;
     const db = await conectarDb();
-    const collection = db.collection('contatos');
-    collection.deleteOne({nome: contato.nome});
+    const collection = db.collection("contatos");
+    await collection.deleteOne({_id: id});
 }
 
-async function buscar(contato){
-    const db = await conectarDb();
-    const collection = db.collection('contato');
-    const result = collection.findOne({nome: contato.nome});
-    contato.nome = result.nome;
-    contato.email = result.email;
-    contato.telefone = result.telefone;
-}
-
-module.exports = {Contato, inserir, alterar, deletar, buscar};
+module.exports = {Contato, inserir, alterar,consultar,deletar};

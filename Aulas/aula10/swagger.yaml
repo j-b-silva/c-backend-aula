@@ -1,8 +1,73 @@
 openapi: 3.0.0
-info: 
+info:
   title: API Loja Virtual
   version: 0.0.1
-tags: 
+tags:
   - produtos
 paths:
+  /produtos:
+    post:
+      tags:
+        - produtos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Produto'
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'
+        422:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mensagem'
+    get:
+      tags:
+        - produtos
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfProdutos'
+  /produtos/{id}:
+    get:
+      tags:
+        - produtos
+      parameters:
+        - in: path
+          type: string
+          name: id
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'
+        404: 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mensagem'
 components:
+  schemas:
+    ArrayOfProdutos:
+      type: array
+      items:
+        $ref: '#/components/schemas/Produto'
+    Produto:
+      type: object
+      properties:
+        nome:
+          type: string
+        preco:
+          type: number
+    Mensagem:
+      type: object
+      properties:
+        msg:
+          type: string

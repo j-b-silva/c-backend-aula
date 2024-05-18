@@ -33,10 +33,15 @@ async function buscarPeloId(req,res,next){
     };
 };
 async function obter(req,res){
-    console.log(req.params.id)
     const id = new mongoose.Types.ObjectId(req.params.id);
     const produto = await Produto.findOne({_id: id});
     res.json(produto);
 };
+async function atualizar(req,res) {
+    const id = new mongoose.Types.ObjectId(req.params.id);
+    const produto = await Produto.findOneAndUpdate({_id: id},req.body);
+    res.json(produto)
+}
 
-module.exports = {validarDados, criar, obterTodos, buscarPeloId, obter};
+
+module.exports = {validarDados, criar, obterTodos, buscarPeloId, obter, atualizar};

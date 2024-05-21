@@ -41,7 +41,12 @@ async function atualizar(req,res) {
     const id = new mongoose.Types.ObjectId(req.params.id);
     const produto = await Produto.findOneAndUpdate({_id: id},req.body);
     res.json(produto)
+};
+async function remover(req,res){
+    const id = new mongoose.Types.ObjectId(req.params.id);
+    await Produto.findOneAndDelete({_id: id});
+    res.status(204).end();
 }
 
 
-module.exports = {validarDados, criar, obterTodos, buscarPeloId, obter, atualizar};
+module.exports = {validarDados, criar, obterTodos, buscarPeloId, obter, atualizar, remover};

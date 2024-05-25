@@ -1,15 +1,39 @@
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
+
 const Usuario = require('../models/users');
 
+function cifrarSenha(senha, salto){
+    const hash = crypto.createHmac("sha256", salto);
+    hash.update(senha);
+    return hash.digest('hex');
+}
+
 async function criar(req,res){
-    const novoUsuario = await Usuario.create(req.body);
-    res.status(201).json({id: novoUsuario._id.toString(), email: novoUsuario.email});
+    const salto = crypto.randomBytes(16).toString('hex');
+    const senhaCifrada = cifrarSenha(req.body.senha, salto);
+
+    const novoUsuario = await Usuario.create({
+        email: req.body.email,
+        senha: senhaCifrada,
+        salto
+    });
+    res
+    .status(201)
+    .json({
+        id: novoUsuario._id.toString(), 
+        email: novoUsuario.email,
+        senha: novoUsuario.senha,
+        salto: novoUsuario.salto
+    });
 };
 
 async function entrar(req,res){
     const usuarioEncontrado = await Usuario.findOne({email: req.body.email});
     if(usuarioEncontrado){
-        if(usuarioEncontrado.senha === req.body.senha){
-            res.json({token: "1234567890"});
+        const senhaCifrada = cifrarSenha(req.body.senha, usuarioEncontrado.salto);
+        if(usuarioEncontrado.senha === senhaCifrada){
+            res.json({token: jwt.sign({email: usuarioEncontrado.email}, '12345678', {expiresIn: "1m"}) });
         } else{
             res.status(401).json({msg: "Acesso negado!"});
         }

@@ -1,0 +1,17 @@
+openapi: 3.0.0
+
+info:
+  title: API Segurança
+  version: 0.1
+
+tags:
+  - name: usuarios
+
+paths:
+  /usuarios:
+  /usuarios/login:
+  /usuarios/renovar:
+
+components: 
+  schemas:
+  securitySchemes:
